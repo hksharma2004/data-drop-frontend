@@ -32,15 +32,25 @@ export async function GET(
 
         const { databases } = await createAdminClient();
 
-        // find the card document using its unique id
-        const cardResponse = await databases.listDocuments(
+
+        let cardResponse = await databases.listDocuments(
             appwriteConfig.databaseId!,
             appwriteConfig.sharedCardsCollectionId!,
             [Query.equal('cardId', cardId)]
         );
 
+
         if (cardResponse.total === 0) {
-            return NextResponse.json({ error: 'Card not found.' }, { status: 404 });
+            try {
+                const doc = await databases.getDocument(
+                    appwriteConfig.databaseId!,
+                    appwriteConfig.sharedCardsCollectionId!,
+                    cardId
+                );
+                cardResponse = { total: 1, documents: [doc] } as any;
+            } catch {
+                return NextResponse.json({ error: 'Card not found.' }, { status: 404 });
+            }
         }
 
         const card = cardResponse.documents[0];

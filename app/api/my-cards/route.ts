@@ -37,7 +37,7 @@ export async function GET() {
                     }
                 }
                 return {
-                    cardId: card.$id,
+                    cardId: card.cardId,
                     name: card.name,
                     description: card.description,
                     createdAt: card.$createdAt,
