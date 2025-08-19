@@ -13,10 +13,13 @@ const UploadProgress = () => {
     const handleUploadStart = (event: CustomEvent) => {
       setFiles(event.detail.files);
       if (event.detail.rect) {
+        const modalWidth = 500;
+        const left = event.detail.rect.right + window.scrollX - modalWidth;
+        
         setPosition({
           top: event.detail.rect.bottom + window.scrollY + 10,
-          left: event.detail.rect.left + window.scrollX,
-          width: 384 // 96 * 4
+          left: left,
+          width: modalWidth
         });
       }
     };
@@ -44,11 +47,11 @@ const UploadProgress = () => {
 
   return (
     <div
-      className="fixed p-4 bg-white border-4 border-black shadow-neo z-50 w-96"
+      className="fixed p-6 bg-white border-4 border-black shadow-neo z-50 w-[500px]"
       style={position ? { top: `${position.top}px`, left: `${position.left}px`, width: `${position.width}px` } : { display: 'none' }}
     >
       <h4 className="text-lg font-bold text-black mb-4 uppercase tracking-wider">Uploading Files</h4>
-      <ul className="space-y-3">
+      <ul className="space-y-4">
         {files.map((file, index) => {
           const { type, extension } = getFileType(file.name);
 
