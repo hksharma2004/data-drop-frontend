@@ -1,5 +1,6 @@
 
 
+import UploadProgress from '@/components/UploadProgress';
 import Header from '@/components/Header'
 import MobileNavigation from '@/components/MobileNavigation'
 import Sidebar from '@/components/Sidebar'
@@ -36,6 +37,7 @@ const Layout = async ({ children } : {children:React.ReactNode}) => {
     </section>
 
     <Toaster />
+    <UploadProgress />
   </main>
  
   

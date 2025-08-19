@@ -44,7 +44,7 @@ export const actionsDropdownItems = [
   },
   {
     label: "Share via Email",
-    icon: "/assets/icons/share.svg",
+    icon: "/assets/icons/share-action.svg",
     value: "share",
   },
   {
