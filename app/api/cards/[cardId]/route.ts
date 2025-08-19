@@ -29,16 +29,39 @@ export async function GET(
 
         const card = cardResponse.documents[0];
 
-  
-        const files = card.files.map((file: any) => ({
-            id: file.$id,
-            name: file.name,
-            url: file.url,
-            size: file.size,
-            type: file.type,
-            extension: file.extension,
-            bucketFileId: file.bucketFileId,
-        }));
+
+        let files: any[] = [];
+        try {
+            const fileIds = (card.files || []).map((f: any) => (typeof f === 'string' ? f : f.$id));
+            if (fileIds.length > 0) {
+                const { databases } = await createAdminClient();
+                const fileDocs = await databases.listDocuments(
+                    appwriteConfig.databaseId!,
+                    appwriteConfig.filesCollectionId!,
+                    [Query.equal('$id', fileIds)]
+                );
+                files = fileDocs.documents.map((file: any) => ({
+                    id: file.$id,
+                    name: file.name,
+                    url: file.url,
+                    size: file.size,
+                    type: file.type,
+                    extension: file.extension,
+                    bucketFileId: file.bucketFileId,
+                }));
+            }
+        } catch (e) {
+
+            files = (card.files || []).map((file: any) => ({
+                id: file.$id ?? file.id ?? file,
+                name: file.name ?? '',
+                url: file.url ?? '',
+                size: file.size ?? 0,
+                type: file.type ?? '',
+                extension: file.extension ?? '',
+                bucketFileId: file.bucketFileId ?? file.bucket_id ?? '',
+            }));
+        }
 
         // format and return the card data back
         const publicCardData = {

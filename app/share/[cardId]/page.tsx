@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon } from '@radix-ui/react-icons';
 import { formatBytes, constructDownloadUrl } from '@/lib/utils';
@@ -23,10 +24,12 @@ interface CardData {
 
 
 async function getCardData(cardId: string): Promise<CardData | null> {
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
-        : 'http://localhost:3000';
-        
+    const hdrs = await headers();
+    const host = hdrs.get('host');
+    const isVercel = Boolean(process.env.VERCEL);
+    const protocol = isVercel ? 'https' : 'http';
+    const baseUrl = host ? `${protocol}://${host}` : 'http://localhost:3000';
+
     const response = await fetch(`${baseUrl}/api/cards/${cardId}`, {
         cache: 'no-store', 
     });
