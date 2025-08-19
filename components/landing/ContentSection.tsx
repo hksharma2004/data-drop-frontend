@@ -72,7 +72,7 @@ export default function ContentSection() {
             <Stack spacing={4}>
               <TextBlock>
                 <FinallyText component="h2">
-                  Finally.
+                Finally. 
                 </FinallyText>
                 <Typography 
                   variant="h4" 
@@ -83,10 +83,10 @@ export default function ContentSection() {
                     color: '#000000'
                   }}
                 >
-                  File Sharing That
+                  File Management  
                 </Typography>
                 <ActuallyWorksText component="span">
-                  Actually Works.
+                That Thinks.
                 </ActuallyWorksText>
               </TextBlock>
               
@@ -100,7 +100,8 @@ export default function ContentSection() {
                     color: '#000000'
                   }}
                 >
-                  Tired of broken links and attachment nightmares? DataDrop offers enterprise power with startup simplicity. Your time is too valuable for file frustration.
+                  Tired of digital chaos? DataDrop organizes your files into smart cards, suggests perfect folder structures with AI, and lets you chat with your PDFs. Plus 2GB of completely secure storage—free. Your productivity revolution starts here.
+                  
                 </Typography>
               </TextBlock>
             </Stack>

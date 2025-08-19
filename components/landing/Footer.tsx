@@ -103,18 +103,18 @@ export default function Footer() {
       <Container maxWidth="lg">
         <Stack spacing={4} alignItems="center" textAlign="center" sx={{ mb: 12 }}>
             <Typography variant="h2" sx={{ fontWeight: 900, textTransform: 'uppercase' }}>
-                Your Files Deserve Better
+            Ready to Work Smarter?
             </Typography>
             <Typography variant="h6" sx={{ maxWidth: '700px', color: 'grey.300' }}>
-                Every day you wait is another day of file frustration. Join the professionals who've discovered what file management should feel like. Your productivity revolution starts now.
+            Experience what file management should feel like. No credit card required.
             </Typography>
             <NextLink href="/sign-up" style={{ textDecoration: 'none' }}>
               <UltimateCTAButton>
                   Transform My Workflow
               </UltimateCTAButton>
             </NextLink>
-            <Typography variant="body2" sx={{ color: 'grey.400' }}>
-                Love it in 14 days or your old chaos back—guaranteed
+            <Typography variant="body1" sx={{ color: 'grey.400' }}>
+            No credit card required. 100% free forever.
             </Typography>
         </Stack>
 

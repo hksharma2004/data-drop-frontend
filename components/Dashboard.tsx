@@ -212,7 +212,7 @@ const DashboardContent = () => {
                     </div>
                 </div>
             ) : files.length > 0 ? (
-                 <section className="file-list space-y-2 sm:space-y-3 lg:space-y-4">
+                 <section className="file-list">
                      {files.map((file) => (
                          <Card key={file.$id} file={file} onShareWithCard={handleShareWithCard} />
                      ))}

@@ -54,38 +54,53 @@ export default function FeaturesSection() {
   const features = [
     {
       icon: <Zap />,
-      title: "Blazing Fast",
-      description: "Don't wait. Upload, share, and download files at maximum speed. We don't throttle.",
+      title: "Smart Storage",
+      description: "2GB of blazing-fast, secure storage. Organize files into intelligent cards. No limits on creativity..",
       bgColor: '#FFFFFF',
       textColor: '#000000',
     },
     {
       icon: <ShieldCheck />,
-      title: "Brutally Secure",
-      description: "No-nonsense, end-to-end encryption. Your files are your business. Period.",
+      title: "QR Code Sharing",
+      description: "Share file cards instantly with QR codes. One scan, instant access. No complex links or broken attachments.",
       bgColor: '#FFFFFF',
       textColor: '#000000',
     },
     {
       icon: <Share2 />,
-      title: "Radical Sharing",
-      description: "Generate shareable links that just work. No logins, no friction, no bloated UI.",
+      title: "Smart Organization",
+      description: "AI analyzes your files and suggests perfect folder structures. Stop thinking, start organizing.",
       bgColor: '#FFFFFF',
       textColor: '#000000',
     },
     {
       icon: <Component />,
-      title: "No-BS API",
-      description: "Integrate with a straightforward, powerful API. Build what you want, how you want.",
+      title: "PDF Conversations",
+      description: "Ask questions, get answers from your PDFs. AI-powered document intelligence at your fingertips.",
+      bgColor: '#FFFFFF',
+      textColor: '#000000',
+    },
+    {
+      icon: <Component />,
+      title: "Smart Tagging",
+      description: "AI automatically tags your cards with relevant keywords. Find anything in seconds, not minutes.",
+      bgColor: '#FFFFFF',
+      textColor: '#000000',
+    },
+    {
+      icon: <Component />,
+      title: "Collaborative Power",
+      description: "Share cards with teammates, collaborate in real-time. Your files, your team, your way.",
       bgColor: '#FFFFFF',
       textColor: '#000000',
     }
+
   ];
 
   return (
     <FeaturesContainer id="features">
       <Container maxWidth="lg">
-        <SectionTitle>Raw Power</SectionTitle>
+        <SectionTitle>FEATURES</SectionTitle>
         <Stack spacing={8}>
             {[0, 2].map(rowIndex => (
                 <Stack key={rowIndex} direction={{ xs: 'column', md: 'row' }} spacing={8}>

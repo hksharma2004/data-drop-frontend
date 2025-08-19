@@ -61,10 +61,10 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
                 setIsFetchingPdfs(true);
                 try {
 
-                    const response = await fetch("http://localhost:8000/list-pdfs");
+                    const response = await fetch("/api/chat-pdf/list");
                     if (!response.ok) {
                         const errData = await response.json();
-                        throw new Error(errData.detail || "Failed to fetch PDF list from server.");
+                        throw new Error(errData.error || "Failed to fetch PDF list from server.");
                     }
                     const data = await response.json();
                     setPdfFiles(data.files || []);
@@ -102,7 +102,7 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
         setAnswer("");
 
         try {
-            const response = await fetch("http://localhost:8000/chat-with-pdfs", {
+            const response = await fetch("/api/chat-pdf/ask", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -113,7 +113,7 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
 
             if (!response.ok) {
                 const errData = await response.json();
-                throw new Error(errData.detail || "An unknown error occurred during processing.");
+                throw new Error(errData.error || "An unknown error occurred during processing.");
             }
 
             const result = await response.json();

@@ -70,7 +70,7 @@ export default function HeroSection() {
           <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
             <Stack spacing={4} alignItems={{ xs: 'center', md: 'flex-start' }}>
               <Headline component="h1" sx={{ textAlign: { xs: 'center', md: 'left' } }}>
-                File Sharing.
+              Smart File Management.
                 <br />
                 <ReimaginedBlock>
                   <Typography 
@@ -84,7 +84,7 @@ export default function HeroSection() {
                       textTransform: 'uppercase',
                     }}
                   >
-                    Reimagined.
+                    REIMAGINED.
                   </Typography>
                 </ReimaginedBlock>
               </Headline>
@@ -99,7 +99,7 @@ export default function HeroSection() {
                   letterSpacing: '0.05em',
                 }}
               >
-                Raw, unfiltered file sharing. No complexity. Just brutalist efficiency.
+                Upload, share, and manage files with production-grade security and blazing speed. QR-powered sharing with AI integration.
               </Typography>
               
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>

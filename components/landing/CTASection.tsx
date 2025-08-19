@@ -27,9 +27,7 @@ export default function CTASection() {
       <Container maxWidth="lg">
         <Stack spacing={6} alignItems="center">
             <Title sx={{ textAlign: 'center' }}>
-                Stop Waiting.
-                <br />
-                Start Creating.
+            START WITH CHANGING YOUR FILE STORAGE ECOSYSTEM.
             </Title>
             <Link href="/sign-up" style={{ textDecoration: 'none' }}>
               <NeoButton 
@@ -43,7 +41,7 @@ export default function CTASection() {
                       minWidth: '320px',
                   }}
               >
-                  Get Started Now
+                  Claim Your Free Storage
               </NeoButton>
             </Link>
         </Stack>
