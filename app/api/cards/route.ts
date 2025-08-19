@@ -5,6 +5,8 @@ import { nanoid } from 'nanoid';
 import { ID, Query, Permission, Role, Models } from 'node-appwrite';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+
 interface NewCardData {
     cardId: string;
     name: string;

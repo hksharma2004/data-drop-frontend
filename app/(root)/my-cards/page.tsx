@@ -5,6 +5,8 @@ import CardItem from '@/components/CardItem';
 import { toast } from 'sonner';
 import ShareCardModal from '@/components/ShareCardModal'; 
 
+export const dynamic = 'force-dynamic';
+
 
 interface SharedCard {
     cardId: string;

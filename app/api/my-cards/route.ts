@@ -4,6 +4,8 @@ import { createAdminClient } from '@/lib/appwrite';
 import { appwriteConfig } from '@/lib/appwrite/config';
 import { Query } from 'node-appwrite';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
         const currentUser = await getCurrentUser();

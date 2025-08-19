@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Layout({ children }: { children: React.ReactNode }) {
 
   let currentUser = null;
