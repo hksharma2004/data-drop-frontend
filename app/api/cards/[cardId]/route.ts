@@ -9,6 +9,22 @@ export async function GET(
     { params }: { params: { cardId: string } }
 ) {
     try {
+
+        const requiredEnv: Array<[string, string | undefined]> = [
+            ['NEXT_PUBLIC_APPWRITE_ENDPOINT', appwriteConfig.endpointUrl],
+            ['NEXT_PUBLIC_APPWRITE_PROJECT', appwriteConfig.projectId],
+            ['NEXT_PUBLIC_APPWRITE_DATABASE', appwriteConfig.databaseId],
+            ['NEXT_PUBLIC_APPWRITE_FILES_COLLECTION', appwriteConfig.filesCollectionId],
+            ['NEXT_PUBLIC_APPWRITE_SHARED_CARDS_COLLECTION', appwriteConfig.sharedCardsCollectionId],
+            ['NEXT_APPWRITE_KEY', appwriteConfig.secretKey],
+        ];
+        const missing = requiredEnv.filter(([, value]) => !value).map(([key]) => key);
+        if (missing.length > 0) {
+            return NextResponse.json(
+                { error: `Missing required environment variables: ${missing.join(', ')}` },
+                { status: 500 }
+            );
+        }
         const cardId = params.cardId;
         if (!cardId) {
             return NextResponse.json({ error: 'Card ID is required.' }, { status: 400 });
@@ -73,8 +89,9 @@ export async function GET(
 
         return NextResponse.json(publicCardData, { status: 200 });
 
-    } catch (error) {
-        console.error(`Error fetching card ${params.cardId}:`, error);
-        return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        console.error(`Error fetching card ${params.cardId}:`, message);
+        return NextResponse.json({ error: `Failed to fetch card: ${message}` }, { status: 500 });
     }
 }

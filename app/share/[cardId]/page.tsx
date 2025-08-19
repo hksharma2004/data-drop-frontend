@@ -39,8 +39,8 @@ async function getCardData(cardId: string): Promise<CardData | null> {
     }
 
     if (!response.ok) {
-
-        console.error('Failed to fetch card data');
+        const text = await response.text();
+        console.error('Failed to fetch card data', response.status, text);
         throw new Error('Could not retrieve card data.');
     }
 
