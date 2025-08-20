@@ -1,7 +1,6 @@
 "use server";
 
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
-import { InputFile } from "node-appwrite/file";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
@@ -13,23 +12,23 @@ const handleError = (error: unknown, message: string) => {
   throw error;
 };
 
-export const uploadFile = async ({
-  file,
+export const createFileRecord = async ({
+  fileId,
   ownerId,
   accountId,
   path,
   parentId = null,
-}: UploadFileProps & { parentId?: string | null }) => {
+}: {
+  fileId: string;
+  ownerId: string;
+  accountId: string;
+  path: string;
+  parentId?: string | null;
+}) => {
   const { storage, databases } = await createAdminClient();
 
   try {
-    const inputFile = InputFile.fromBuffer(file, file.name);
-
-    const bucketFile = await storage.createFile(
-      appwriteConfig.bucketId,
-      ID.unique(),
-      inputFile,
-    );
+    const bucketFile = await storage.getFile(appwriteConfig.bucketId, fileId);
 
     const fileDocument = {
       type: getFileType(bucketFile.name).type,
@@ -59,7 +58,7 @@ export const uploadFile = async ({
     revalidatePath(path);
     return parseStringify(newFile);
   } catch (error) {
-    handleError(error, "Failed to upload file");
+    handleError(error, "Failed to create file record");
   }
 };
 

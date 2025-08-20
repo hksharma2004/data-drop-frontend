@@ -15,7 +15,7 @@ const FeatureCard = styled(Box, {
   ({ theme, bgColor, textColor }) => ({
     border: "4px solid #000000",
     padding: "32px",
-    aspectRatio: "4/3", // Makes the card landscape rectangular
+    aspectRatio: "4/3", 
     display: "flex",
     flexDirection: "column",
     transition: "all 200ms ease",

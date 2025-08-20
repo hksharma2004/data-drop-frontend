@@ -8,7 +8,10 @@ import Image from "next/image";
 import { MAX_FILE_SIZE } from "@/constants";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { uploadFile } from "@/lib/actions/file.actions";
+import { storage } from "@/lib/appwrite/client";
+import { appwriteConfig } from "@/lib/appwrite/config";
+import { ID } from "appwrite";
+import { createFileRecord } from "@/lib/actions/file.actions";
 
 interface Props {
   ownerId: string;
@@ -34,10 +37,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           );
 
           return toast.error(
-            <p className="body-2 text-white">
-              <span className="font-semibold">{file.name}</span> is too large.
-              Max file size is 50MB.
-            </p>,
+            "FILE LIMIT EXCEEDED. STAY WITHIN THE LIMIT OF 50 MB.",
             {
               className:
                 "group-[.toaster]:bg-destructive group-[.toaster]:text-destructive-foreground",
@@ -45,17 +45,31 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           );
         }
 
-        return uploadFile({ file, ownerId, accountId, path }).then(
-          (uploadedFile) => {
-            if (uploadedFile) {
-              window.dispatchEvent(
-                new CustomEvent("upload-end", {
-                  detail: { fileName: file.name },
-                })
-              );
-            }
-          }
-        );
+        // Upload file to Appwrite storage
+        return storage
+          .createFile(appwriteConfig.bucketId!, ID.unique(), file)
+          .then(async (response) => {
+            await createFileRecord({
+              fileId: response.$id,
+              ownerId,
+              accountId,
+              path,
+            });
+
+            window.dispatchEvent(
+              new CustomEvent("upload-end", {
+                detail: { fileName: file.name },
+              })
+            );
+          }).catch((error) => {
+            console.error("Failed to upload file to Appwrite:", error);
+            toast.error(`Failed to upload ${file.name}. Please try again.`);
+            window.dispatchEvent(
+              new CustomEvent("upload-end", {
+                detail: { fileName: file.name },
+              })
+            );
+          });
       });
 
       await Promise.all(uploadPromises);
