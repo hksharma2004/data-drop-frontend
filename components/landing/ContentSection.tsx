@@ -3,6 +3,8 @@
 import React from 'react';
 import { Box, Typography, Container, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Video from '@/components/Video'; 
+
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#FFFFFF',
@@ -16,7 +18,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   border: '4px solid #000000',
   boxShadow: '8px 8px 0px #000000',
   position: 'relative',
-  height: '600px',
+  height: '466px',
   width: '100%',
   '& img': {
     width: '100%',
@@ -116,10 +118,7 @@ export default function ContentSection() {
             pt: 4 
           }}>
             <ImageContainer>
-              <img 
-                src="https://images.unsplash.com/photo-1587825140708-df8769a5e876?q=80&w=2070&auto=format&fit=crop"
-                alt="A structured yet bold representation of file organization"
-              />
+              <Video />
             </ImageContainer>
           </Box>
         </Stack>
