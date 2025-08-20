@@ -1,6 +1,5 @@
 "use client";
 
-"use client";
 
 import {
   Dialog,
@@ -17,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Models } from "node-appwrite";
 import { actionsDropdownItems } from "@/constants";
@@ -30,6 +29,7 @@ import {
   renameFile,
   updateFileUsers,
 } from "@/lib/actions/file.actions";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { usePathname, useRouter } from "next/navigation";
 import { FileDetails, ShareInput } from "@/components/ActionModalContent";
 
@@ -48,8 +48,25 @@ const ActionDropdown = ({ file, onShareWithCard }: ActionDropdownProps) => {
   const [inputEmail, setInputEmail] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
+  const { user } = useCurrentUser();
+
   const path = usePathname();
   const router = useRouter();
+
+  const filteredActions = useMemo(() => {
+    if (!user) return actionsDropdownItems;
+
+    const isOwner = file.userId === user.$id;
+
+    if (isOwner) {
+      return actionsDropdownItems;
+    } else {
+      return actionsDropdownItems.filter(
+        (item) =>
+          !["rename", "share", "share-card"].includes(item.value)
+      );
+    }
+  }, [file, user]);
 
   const closeAllModals = () => {
     setIsModalOpen(false);
@@ -201,7 +218,7 @@ const ActionDropdown = ({ file, onShareWithCard }: ActionDropdownProps) => {
             {file.name}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {actionsDropdownItems.map((actionItem) => (
+          {filteredActions.map((actionItem) => (
             <DropdownMenuItem
               key={actionItem.value}
               className="shad-dropdown-item hover:bg-[#FF7A3D]/10"
