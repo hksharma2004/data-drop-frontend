@@ -1,5 +1,6 @@
 "use client";
 
+"use client";
 
 import {
   Dialog,
@@ -54,16 +55,20 @@ const ActionDropdown = ({ file, onShareWithCard }: ActionDropdownProps) => {
   const router = useRouter();
 
   const filteredActions = useMemo(() => {
-    if (!user) return actionsDropdownItems;
+    if (!user || !file.owner) {
 
-    const isOwner = file.userId === user.$id;
+      return actionsDropdownItems.filter(
+        (item) => ["details", "download"].includes(item.value)
+      );
+    }
+
+    const isOwner = file.owner.$id === user.$id;
 
     if (isOwner) {
       return actionsDropdownItems;
     } else {
-      return actionsDropdownItems.filter(
-        (item) =>
-          !["rename", "share", "share-card"].includes(item.value)
+      return actionsDropdownItems.filter((item) =>
+        ["details", "download", "delete"].includes(item.value)
       );
     }
   }, [file, user]);
