@@ -51,7 +51,6 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
 
     useEffect(() => {
         if (isOpen) {
-
             setAnswer("");
             setError(null);
             setQuestion("");
@@ -60,7 +59,6 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
             const fetchPdfs = async () => {
                 setIsFetchingPdfs(true);
                 try {
-
                     const response = await fetch("/api/chat-pdf/list");
                     if (!response.ok) {
                         const errData = await response.json();
@@ -133,6 +131,9 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
                     <DialogDescription className="text-gray-600">
                         Select PDFs from your storage, ask a question, and get an AI-powered answer.
                     </DialogDescription>
+                    <DialogDescription className="text-gray-600">
+                        It may take some time to fetch PDFs. Please wait.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="flex-1 flex gap-6 my-4 min-h-0">
@@ -183,7 +184,6 @@ const ChatWithPdfModal = ({ isOpen, onOpenChange }: ChatWithPdfModalProps) => {
                             </div>
                         )}
                     </div>
-
 
                     <div className="w-1/2">
                         <h3 className="font-bold mb-2 text-lg">Answer</h3>
