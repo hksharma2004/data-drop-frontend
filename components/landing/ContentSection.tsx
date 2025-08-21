@@ -14,20 +14,6 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-const ImageContainer = styled(Box)(({ theme }) => ({
-  border: '4px solid #000000',
-  boxShadow: '8px 8px 0px #000000',
-  position: 'relative',
-  height: '466px',
-  width: '100%',
-  '& img': {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    filter: 'grayscale(100%) contrast(1.2)',
-  }
-}));
-
 const TextBlock = styled(Box)(({ theme }) => ({
   backgroundColor: '#FFFFFF',
   border: '4px solid #000000',
@@ -114,12 +100,12 @@ export default function ContentSection() {
             flex: 1, 
             display: 'flex', 
             justifyContent: 'center',
-            alignItems: 'flex-start',
-            pt: 4 
+            alignItems: 'center',
+            width: '100%',
+            pt: { xs: 8, lg: 4 },
+            px: { xs: 2, sm: 0 }
           }}>
-            <ImageContainer>
-              <Video />
-            </ImageContainer>
+            <Video />
           </Box>
         </Stack>
       </Container>

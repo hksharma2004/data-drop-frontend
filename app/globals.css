@@ -1086,6 +1086,11 @@
     background-size: 200% 100%;
     animation: gradientShimmer 2000ms ease-in-out infinite;
   }
+
+  .responsive-video {
+    @apply w-full max-w-full h-auto object-cover;
+    aspect-ratio: 16 / 9;
+  }
 }
 
 @layer base {
