@@ -95,7 +95,10 @@ export async function POST(request: Request) {
         const result: GeminiAIResponse = await response.json();
 
         const generatedText = result.candidates[0].content.parts[0].text;
-        const generatedJson: GeneratedContent = JSON.parse(generatedText);
+        
+
+        const cleanedText = generatedText.replace(/```json\n?|```/g, '').trim();
+        const generatedJson: GeneratedContent = JSON.parse(cleanedText);
 
         return NextResponse.json(generatedJson, { status: 200 });
 
