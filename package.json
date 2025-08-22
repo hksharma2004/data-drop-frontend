@@ -10,8 +10,6 @@
     "db:setup": "ts-node --require dotenv/config scripts/setup-appwrite.ts"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.10.0",
     "@mui/material": "^7.3.1",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -29,7 +27,6 @@
     "clsx": "^2.1.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.454.0",
-    "mui": "^0.0.1",
     "nanoid": "^5.1.5",
     "next": "15.0.2",
     "next-themes": "^0.4.6",
