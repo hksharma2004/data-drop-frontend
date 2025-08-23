@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
+import { getCurrentUser } from "@/lib/actions/user.actions";
 
 export async function GET() {
   const apiBase = process.env.CHAT_PDF_API_BASE || "http://localhost:8000";
 
   try {
-    const response = await fetch(`${apiBase}/list-pdfs`, {
+    // getting current user's account id
+    const currentUser = await getCurrentUser();
 
+    // checking if the user has been authenticated for the accountId
+    if (!currentUser || !currentUser.accountId) {
+      return NextResponse.json(
+        { error: "User not authenticated or accountId missing" },
+        { status: 401 } // Unauthorized
+      );
+    }
+
+    // posting the account id to the backend list-pdfs endpoint
+    const response = await fetch(`${apiBase}/list-pdfs?accountId=${currentUser.accountId}`, {
       cache: "no-store",
     });
 
@@ -27,5 +39,3 @@ export async function GET() {
     );
   }
 }
-
-
