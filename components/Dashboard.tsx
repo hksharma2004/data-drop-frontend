@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense, useCallback } from "react";
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Models } from "node-appwrite";
@@ -34,29 +34,41 @@ const DashboardContent = () => {
     const [isChatModalOpen, setIsChatModalOpen] = useState(false);
     const [preSelectedFile, setPreSelectedFile] = useState<FileData | undefined>();
 
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const [filesData, foldersData, spaceData, pathData] = await Promise.all([
+                getFiles({ types: [], parentId: folderId }),
+                getFolders({ parentId: folderId }),
+                getTotalSpaceUsed(),
+                getFolderPath(folderId)
+            ]);
+            setFiles(filesData.documents);
+            setFolders(foldersData);
+            setTotalSpace(spaceData);
+            setFolderPath(pathData);
+        } catch (error) {
+            console.error("Failed to fetch dashboard data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [folderId]);
+
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const [filesData, foldersData, spaceData, pathData] = await Promise.all([
-                    getFiles({ types: [], parentId: folderId }),
-                    getFolders({ parentId: folderId }),
-                    getTotalSpaceUsed(),
-                    getFolderPath(folderId)
-                ]);
-                setFiles(filesData.documents);
-                setFolders(foldersData);
-                setTotalSpace(spaceData);
-                setFolderPath(pathData);
-            } catch (error) {
-                console.error("Failed to fetch dashboard data:", error);
-            } finally {
-                setIsLoading(false);
-            }
+        fetchData();
+    }, [fetchData]);
+
+    useEffect(() => {
+        const handleUploadEnd = () => {
+            fetchData();
         };
 
-        fetchData();
-    }, [folderId]);
+        window.addEventListener("upload-end", handleUploadEnd);
+
+        return () => {
+            window.removeEventListener("upload-end", handleUploadEnd);
+        };
+    }, [fetchData]);
 
     const formattedFiles: FileData[] = useMemo(() => 
         files.map(file => ({
