@@ -59,7 +59,8 @@ const DashboardContent = () => {
     }, [fetchData]);
 
     useEffect(() => {
-        const handleUploadEnd = () => {
+        const 
+        handleUploadEnd = () => {
             fetchData();
         };
 
