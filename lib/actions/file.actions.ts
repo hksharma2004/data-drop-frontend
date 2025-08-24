@@ -1,6 +1,6 @@
 "use server";
 
-import { createAdminClient, createSessionClient } from "@/lib/appwrite";
+import { createAdminClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { ID, Models, Query } from "node-appwrite";
 import { constructFileUrl, getFileType, parseStringify } from "@/lib/utils";
@@ -15,13 +15,11 @@ const handleError = (error: unknown, message: string) => {
 export const createFileRecord = async ({
   fileId,
   ownerId,
-  accountId,
   path,
   parentId = null,
 }: {
   fileId: string;
   ownerId: string;
-  accountId: string;
   path: string;
   parentId?: string | null;
 }) => {
@@ -37,7 +35,6 @@ export const createFileRecord = async ({
       extension: getFileType(bucketFile.name).extension,
       size: bucketFile.sizeOriginal,
       owner: ownerId,
-      accountId,
       users: [],
       bucketFileId: bucketFile.$id,
       parentId: parentId,
@@ -183,7 +180,6 @@ export const createFolder = async ({ folderName, parentId = null, path }: { fold
       {
         name: folderName,
         owner: currentUser.$id,
-        accountId: currentUser.accountId,
         parentId: parentId,
       }
     );
@@ -268,7 +264,7 @@ export const deleteFolder = async ({ folderId, path }: { folderId: string, path:
 }
 
 export async function getTotalSpaceUsed() {
-  const { databases } = await createSessionClient();
+  const { databases } = await createAdminClient();
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User is not authenticated.");

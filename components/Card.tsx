@@ -11,6 +11,8 @@ interface CardProps {
 }
 
 const Card = ({ file, onShareWithCard }: CardProps) => {
+
+
   return (
     <div className="file-card">
       <div className="flex flex-col gap-3 sm:gap-4 h-full">
@@ -39,7 +41,7 @@ const Card = ({ file, onShareWithCard }: CardProps) => {
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1 truncate">
-                By: {file.owner.fullName}
+                By: {file.owner?.fullName || "Unknown Owner"}
               </p>
             </div>
           </Link>

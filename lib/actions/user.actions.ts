@@ -1,12 +1,14 @@
 "use server";
 
-import { createAdminClient, createSessionClient } from "@/lib/appwrite";
+import { createAdminClient } from "@/lib/appwrite";
 import { appwriteConfig } from "@/lib/appwrite/config";
 import { Query, ID } from "node-appwrite";
 import { parseStringify } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { avatarPlaceholderUrl } from "@/constants";
 import { redirect } from "next/navigation";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -25,120 +27,129 @@ const handleError = (error: unknown, message: string) => {
   throw error;
 };
 
-export const sendEmailOTP = async ({ email }: { email: string }) => {
-  const { account } = await createAdminClient();
-
-  try {
-    const session = await account.createEmailToken(ID.unique(), email);
-
-    return session.userId;
-  } catch (error) {
-    handleError(error, "Failed to send email OTP");
-  }
-};
-
 export const createAccount = async ({
   fullName,
   email,
+  password,
 }: {
   fullName: string;
   email: string;
+  password: any;
 }) => {
   const existingUser = await getUserByEmail(email);
 
-  const accountId = await sendEmailOTP({ email });
-  if (!accountId) throw new Error("Failed to send an OTP");
-
-  if (!existingUser) {
-    const { databases } = await createAdminClient();
-
-    await databases.createDocument(
-      appwriteConfig.databaseId!,
-      appwriteConfig.usersCollectionId!,
-      ID.unique(),
-      {
-        fullName,
-        email,
-        avatar: avatarPlaceholderUrl,
-        accountId,
-      },
-    );
+  if (existingUser) {
+    throw new Error("User already exists");
   }
 
-  return parseStringify({ accountId });
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const { databases } = await createAdminClient();
+
+  const newUser = await databases.createDocument(
+    appwriteConfig.databaseId!,
+    appwriteConfig.usersCollectionId!,
+    ID.unique(),
+    {
+      fullName,
+      email,
+      password: hashedPassword,
+      avatar: avatarPlaceholderUrl,
+    },
+  );
+
+  return parseStringify(newUser);
 };
 
-export const verifySecret = async ({
-  accountId,
+export const signInUser = async ({
+  email,
   password,
 }: {
-  accountId: string;
-  password: string;
+  email: string;
+  password: any;
 }) => {
   try {
-    const { account } = await createAdminClient();
+    const existingUser = await getUserByEmail(email);
 
-    const session = await account.createSession(accountId, password);
+    if (!existingUser) {
+      throw new Error("User not found");
+    }
 
-    (await cookies()).set("appwrite-session", session.secret, {
-      path: "/",
+    if (!existingUser.password) {
+      throw new Error("Account does not have a password. Please sign up again.");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+
+    if (!passwordMatch) {
+      throw new Error("Invalid credentials");
+    }
+
+    const token = jwt.sign(
+      {
+        id: existingUser.$id,
+        email: existingUser.email,
+        fullName: existingUser.fullName,
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" },
+    );
+
+    cookies().set("jwt", token, {
       httpOnly: true,
-      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
     });
 
-    return parseStringify({ sessionId: session.$id });
+    return parseStringify({ success: true });
   } catch (error) {
-    handleError(error, "Failed to verify OTP");
+    handleError(error, "Failed to sign in user");
   }
 };
 
+const getUserById = async (userId: string) => {
+  const { databases } = await createAdminClient();
+
+  const result = await databases.listDocuments(
+    appwriteConfig.databaseId!,
+    appwriteConfig.usersCollectionId!,
+    [Query.equal("$id", [userId])],
+  );
+
+  return result.total > 0 ? result.documents[0] : null;
+}
 
 export const getCurrentUser = async () => {
   try {
-    const { databases, account } = await createSessionClient();
+    const token = (await cookies()).get("jwt")?.value;
 
-    const result = await account.get();
+    if (!token) {
+      return null;
+    }
 
-    const user = await databases.listDocuments(
-      appwriteConfig.databaseId!,
-      appwriteConfig.usersCollectionId!,
-      [Query.equal("accountId", result.$id)],
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      id: string;
+    };
 
-    if (user.total <= 0) return null;
+    const user = await getUserById(decoded.id);
 
-    return parseStringify(user.documents[0]);
+    if (!user) {
+      return null;
+    }
+
+    return parseStringify(user);
   } catch (error) {
-    return null; 
+    return null;
   }
 };
 
 export const signOutUser = async () => {
-  const { account } = await createSessionClient();
-
   try {
-    await account.deleteSession("current");
-    (await cookies()).delete("appwrite-session");
+    cookies().delete("jwt");
   } catch (error) {
     handleError(error, "Failed to sign out user");
   } finally {
     redirect("/sign-in");
-  }
-};
-
-export const signInUser = async ({ email }: { email: string }) => {
-  try {
-    const existingUser = await getUserByEmail(email);
-
-    // User exists, send OTP
-    if (existingUser) {
-      await sendEmailOTP({ email });
-      return parseStringify({ accountId: existingUser.accountId });
-    }
-
-    return parseStringify({ accountId: null, error: "User not found" });
-  } catch (error) {
-    handleError(error, "Failed to sign in user");
   }
 };
