@@ -5,19 +5,19 @@ export async function GET() {
   const apiBase = process.env.CHAT_PDF_API_BASE || "http://localhost:8000";
 
   try {
-    // getting current user's account id
+    // getting current user
     const currentUser = await getCurrentUser();
 
-    // checking if the user has been authenticated for the accountId
-    if (!currentUser || !currentUser.accountId) {
+    // checking if the user has been authenticated
+    if (!currentUser || !currentUser.$id) {
       return NextResponse.json(
-        { error: "User not authenticated or accountId missing" },
+        { error: "User not authenticated" },
         { status: 401 } // Unauthorized
       );
     }
 
-    // posting the account id to the backend list-pdfs endpoint
-    const response = await fetch(`${apiBase}/list-pdfs?accountId=${currentUser.accountId}`, {
+    // passing the owner's user id to the backend list-pdfs endpoint
+    const response = await fetch(`${apiBase}/list-pdfs?owner=${currentUser.$id}`, {
       cache: "no-store",
     });
 
