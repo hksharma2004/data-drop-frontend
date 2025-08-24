@@ -1,7 +1,7 @@
 # 📁 DataDrop - Smart File Management Reimagined
 
 
-![DataDrop Banner](path/to/your/banner-image.png)
+![DataDrop Banner](public/readme/banner.png)
 
 <div align="center">
   <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js 15">
@@ -22,13 +22,13 @@
 
 ## 📸 Screenshots
 
-![Dashboard Screenshot](path/to/dashboard-screenshot.png)
+![Dashboard Screenshot](public/readme/dashboard.png)
 *Main Dashboard with File Management Interface*
 
-![Share Card Feature](path/to/share-card-screenshot.png)
+![Share Card Feature](public/readme/card.png)
 *QR Code Generation and File Sharing*
 
-![AI Chat Feature](path/to/ai-chat-screenshot.png)
+![AI Chat Feature](public/readme/chat.png)
 *PDF Conversation with AI Assistant*
 
 ---
@@ -65,7 +65,7 @@
 ### System Architecture
 
 
-![System Architecture Diagram](path/to/system-architecture-diagram.png)
+![System Architecture Diagram](public/readme/arch.png)
 *DataDrop System Architecture and Component Flow*
 
 ### Core API Endpoints
@@ -93,7 +93,7 @@
 ### Data Flow Architecture
 
 
-![API Endpoints Architecture](path/to/api-endpoints-diagram.png)
+![API Endpoints Architecture](public/readme/api.png)
 *DataDrop API Endpoints and Data Flow Structure*
 
 ---
@@ -149,7 +149,7 @@
    NEXT_PUBLIC_APPWRITE_BUCKET=your_storage_bucket_id
    NEXT_APPWRITE_KEY=your_appwrite_api_key
    
-   # AI Integration (Optional)
+   # AI Integration 
    GEMINI_API_KEY_METADATA=your_gemini_api_key
    CHATPDF_API_KEY=your_chatpdf_api_key
    ```
@@ -175,18 +175,11 @@
 ### File Upload
 
 
-![File Upload Demo](path/to/file-upload-demo.gif)
-*Drag and drop file upload with progress tracking*
-
 1. Navigate to the dashboard and drag files into the upload area
 2. Monitor real-time progress with visual indicators
 3. Organize files into custom folders and collections
 
 ### Creating Share Cards
-
-
-![Share Card Creation](path/to/share-card-demo.gif)
-*Creating shareable file cards with QR codes*
 
 1. Select multiple files from your library
 2. Create a shareable card with custom metadata
@@ -194,28 +187,9 @@
 
 ### AI Features
 
-
-![AI Features Demo](path/to/ai-features-demo.gif)
-*AI-powered PDF conversations and smart organization*
-
 1. Use AI suggestions for optimal folder organization
 2. Chat with PDF documents to extract information
 3. Leverage automatic tagging for better file discovery
-
----
-
-## 🎨 Design System
-
-<!-- Add design system showcase image here -->
-![Design System Showcase](path/to/design-system-showcase.png)
-*DataDrop's Neobrutalism Design Elements*
-
-DataDrop features a custom **Neobrutalism** design system with:
-
-- **Bold, high-contrast color schemes**
-- **Sharp geometric shapes** with heavy borders
-- **Playful shadows and transforms**
-- **Accessible, mobile-first responsive design**
 
 ---
 
@@ -259,9 +233,3 @@ We welcome contributions! Here's how you can help:
 This project is **private**. All rights reserved.
 
 ---
-
-## 🔗 Links
-
-- **Live Demo**: [Coming Soon]
-- **Documentation**: [Coming Soon]
-- **Support**: [Create an Issue](https://github.com/hksharma2004/data-drop-frontend/issues)
