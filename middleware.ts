@@ -5,7 +5,11 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const isPublicPath =
-    path === "/" || path === "/sign-in" || path === "/sign-up" || path === "/landing";
+    path === "/" ||
+    path.startsWith("/share") ||
+    path === "/sign-in" ||
+    path === "/sign-up" ||
+    path === "/landing";
 
   const token = request.cookies.get("jwt")?.value || "";
 
