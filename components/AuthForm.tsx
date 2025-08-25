@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createAccount, signInUser } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type FormType = "sign-in" | "sign-up";
 
@@ -59,6 +60,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           email: values.email,
           password: values.password,
         });
+        toast("Sign up complete! Please log in now.");
         router.push("/sign-in");
       } else {
         await signInUser({
