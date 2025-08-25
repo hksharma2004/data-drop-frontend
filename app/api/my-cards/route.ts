@@ -48,8 +48,8 @@ export async function GET() {
             })
         );
         return NextResponse.json(userCards, { status: 200 });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching user cards:', error);
-        return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+        return NextResponse.json({ error: 'An unexpected error occurred.', details: error.message }, { status: 500 });
     }
 }
