@@ -19,7 +19,7 @@ export async function GET() {
         const cardsResponse = await databases.listDocuments(
             appwriteConfig.databaseId!,
             appwriteConfig.sharedCardsCollectionId!,
-            [Query.equal('ownerId', currentUser.accountId)] 
+            [Query.equal('ownerId', currentUser.$id)]
         );
 
         const userCards = await Promise.all(
