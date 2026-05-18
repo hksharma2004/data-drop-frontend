@@ -95,7 +95,8 @@ export const signInUser = async ({
       { expiresIn: "1h" },
     );
 
-    cookies().set("jwt", token, {
+    const cookieStore = await cookies();
+    cookieStore.set("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -146,7 +147,8 @@ export const getCurrentUser = async () => {
 
 export const signOutUser = async () => {
   try {
-    cookies().delete("jwt");
+    const cookieStore = await cookies();
+    cookieStore.delete("jwt");
   } catch (error) {
     handleError(error, "Failed to sign out user");
   } finally {
