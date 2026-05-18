@@ -4,9 +4,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // to make sure we are not blocked by next js which has body size limit of 4mb only
   experimental: {
     serverActions: {
