@@ -55,11 +55,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
     try {
       if (type === "sign-up") {
-        await createAccount({
+        const result = await createAccount({
           fullName: values.fullName!,
           email: values.email,
           password: values.password,
         });
+
+        if (result?.error) {
+          toast.error(result.error);
+          return;
+        }
+
         toast("Sign up complete! Please log in now.");
         router.push("/sign-in");
       } else {

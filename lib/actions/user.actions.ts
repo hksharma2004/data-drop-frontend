@@ -39,7 +39,7 @@ export const createAccount = async ({
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    throw new Error("User already exists");
+    return { error: "User already exists" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
