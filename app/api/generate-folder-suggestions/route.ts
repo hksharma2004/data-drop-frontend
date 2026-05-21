@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { generateJsonWithOpenRouter } from '@/lib/ai/openrouter';
 
 interface FileMetadata {
     name: string;
@@ -9,17 +10,6 @@ interface GenerateSuggestionsRequestBody {
     files: FileMetadata[];
 }
 
-interface GeminiAIResponse {
-    candidates: Array<{
-        content: {
-            parts: Array<{
-                text: string;
-            }>;
-        };
-    }>;
-}
-
-
 type GeneratedSuggestions = Record<string, string[]>;
 
 export async function POST(request: Request) {
@@ -29,11 +19,6 @@ export async function POST(request: Request) {
 
         if (!files || !Array.isArray(files) || files.length === 0) {
             return NextResponse.json({ error: 'File metadata is required.' }, { status: 400 });
-        }
-
-        const geminiAIApiKey = process.env.GEMINI_API_KEY_FOLDER_SUGGESTIONS;
-        if (!geminiAIApiKey) {
-            return NextResponse.json({ error: 'AI service is not configured.' }, { status: 500 });
         }
 
         const fileList = files.map(f => `- ${f.name}`).join('\\n');
@@ -63,33 +48,7 @@ export async function POST(request: Request) {
             {"Project Alpha":["project_alpha_report.docx","project_alpha_data.xlsx"],"Vacation Photos":["vacation_photo_1.jpg","vacation_photo_2.png"],"Miscellaneous":["resume_2023.pdf","company-logo.svg"]}
         `;
 
-        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiAIApiKey}`;
-
-        const response = await fetch(geminiApiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }]
-            }),
-        });
-
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Gemini AI API request failed:', response.status, errorBody);
-            throw new Error(`AI generation failed. Status: ${response.status}`);
-        }
-
-        const result: GeminiAIResponse = await response.json();
-
-        const generatedText = result.candidates[0].content.parts[0].text;
-        
-        const sanitizedText = generatedText.replace(/\`\`\`json\n?|\n?\`\`\`/g, '').trim();
+        const sanitizedText = await generateJsonWithOpenRouter(prompt);
 
         const generatedJson: GeneratedSuggestions = JSON.parse(sanitizedText);
 

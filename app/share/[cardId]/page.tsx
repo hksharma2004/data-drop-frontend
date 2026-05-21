@@ -48,8 +48,9 @@ async function getCardData(cardId: string): Promise<CardData | null> {
 }
 
 
-const PublicSharePage = async ({ params }: { params: { cardId: string } }) => {
-    const cardData = await getCardData(params.cardId);
+const PublicSharePage = async ({ params }: { params: Promise<{ cardId: string }> }) => {
+    const { cardId } = await params;
+    const cardData = await getCardData(cardId);
 
     // If the card doesn't exist, show a 404 page
     if (!cardData) {

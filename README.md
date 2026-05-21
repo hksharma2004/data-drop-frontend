@@ -81,7 +81,7 @@
   - Access: Authenticated users only
 
 - **`/api/generate-card-metadata`** - AI-powered card generation
-  - Service: Gemini AI integration
+  - Service: OpenRouter AI integration
   - Returns: Smart metadata and organization suggestions
   - Access: Authenticated users only
 
@@ -106,7 +106,7 @@
 | **Styling** | Tailwind CSS with custom Neobrutalism theme |
 | **UI Components** | Radix UI + Custom components |
 | **Backend** | Appwrite for storage and database |
-| **AI Integration** | Gemini AI for intelligent features |
+| **AI Integration** | OpenRouter AI for intelligent features |
 | **File Handling** | React Dropzone with custom upload system |
 | **QR Codes** | QRCode.react for sharing functionality |
 | **Language** | TypeScript |
@@ -150,7 +150,8 @@
    NEXT_APPWRITE_KEY=your_appwrite_api_key
    
    # AI Integration 
-   GEMINI_API_KEY_METADATA=your_gemini_api_key
+   OPENROUTER_API_KEY=your_openrouter_api_key
+   OPENROUTER_MODEL=openrouter/owl-alpha
    CHATPDF_API_KEY=your_chatpdf_api_key
    ```
 

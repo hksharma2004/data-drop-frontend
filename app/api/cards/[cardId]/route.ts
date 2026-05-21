@@ -6,8 +6,9 @@ import { Query } from 'node-appwrite';
 
 export async function GET(
     request: Request,
-    { params }: { params: { cardId: string } }
+    { params }: { params: Promise<{ cardId: string }> }
 ) {
+    let cardId: string | undefined;
     try {
 
         const requiredEnv: Array<[string, string | undefined]> = [
@@ -25,7 +26,7 @@ export async function GET(
                 { status: 500 }
             );
         }
-        const cardId = params.cardId;
+        ({ cardId } = await params);
         if (!cardId) {
             return NextResponse.json({ error: 'Card ID is required.' }, { status: 400 });
         }
@@ -76,7 +77,7 @@ export async function GET(
                     bucketFileId: file.bucketFileId,
                 }));
             }
-        } catch (e) {
+        } catch {
 
             files = (card.files || []).map((file: any) => ({
                 id: file.$id ?? file.id ?? file,
@@ -101,7 +102,7 @@ export async function GET(
 
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Unknown error';
-        console.error(`Error fetching card ${params.cardId}:`, message);
+        console.error(`Error fetching card ${cardId ?? 'unknown'}:`, message);
         return NextResponse.json({ error: `Failed to fetch card: ${message}` }, { status: 500 });
     }
 }
