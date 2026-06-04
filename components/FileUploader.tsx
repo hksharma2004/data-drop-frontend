@@ -8,10 +8,6 @@ import Image from "next/image";
 import { MAX_FILE_SIZE } from "@/constants";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { storage } from "@/lib/appwrite/client";
-import { appwriteConfig } from "@/lib/appwrite/config";
-import { ID } from "appwrite";
-import { createFileRecord } from "@/lib/actions/file.actions";
 
 interface Props {
   ownerId: string;
@@ -19,7 +15,7 @@ interface Props {
   className?: string;
 }
 
-const FileUploader = ({ ownerId, accountId, className }: Props) => {
+const FileUploader = ({ ownerId, className }: Props) => {
   const path = usePathname();
   const uploaderRef = useRef<HTMLDivElement>(null);
 
@@ -45,16 +41,20 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           );
         }
 
-        // Upload file to Appwrite storage
-        return storage
-          .createFile(appwriteConfig.bucketId!, ID.unique(), file)
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("ownerId", ownerId);
+        formData.append("path", path);
+
+        return fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        })
           .then(async (response) => {
-            await createFileRecord({
-              fileId: response.$id,
-              ownerId,
-              accountId,
-              path,
-            });
+            if (!response.ok) {
+              const data = await response.json().catch(() => null);
+              throw new Error(data?.error || "Upload failed");
+            }
 
             window.dispatchEvent(
               new CustomEvent("upload-end", {
@@ -63,7 +63,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
             );
           }).catch((error) => {
             console.error("Failed to upload file to Appwrite:", error);
-            toast.error(`Failed to upload ${file.name}. Please try again.`);
+            toast.error(`Failed to upload ${file.name}. ${error.message || "Please try again."}`);
             window.dispatchEvent(
               new CustomEvent("upload-end", {
                 detail: { fileName: file.name },
@@ -74,7 +74,7 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
 
       await Promise.all(uploadPromises);
     },
-    [ownerId, accountId, path]
+    [ownerId, path]
   );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
